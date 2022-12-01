@@ -1,0 +1,9 @@
+# Ignore Vue files
+node_modules
+dist
+
+# Ignore ASP files
+bin
+obj
+.vs
+packages
