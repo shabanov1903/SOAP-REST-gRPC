@@ -24,6 +24,12 @@
 	  <Protobuf Include="..\ClinicService\Proto\clinic.proto" GrpcServices="Client">
 	    <Link>Proto\clinic.proto</Link>
 	  </Protobuf>
+	  <Protobuf Include="..\ClinicService\Proto\consultation.proto" GrpcServices="Client">
+	    <Link>Proto\consultation.proto</Link>
+	  </Protobuf>
+	  <Protobuf Include="..\ClinicService\Proto\pet.proto" GrpcServices="Client">
+	    <Link>Proto\pet.proto</Link>
+	  </Protobuf>
 	</ItemGroup>
 
 </Project>

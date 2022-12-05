@@ -1,45 +1,62 @@
-﻿using ClinicServiceNamespace;
+﻿using ClinicService.Client.Clients;
+using ClinicService.Client.Clients.Impl;
+using ClinicServiceNamespace;
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Net.Client;
 using static ClinicServiceNamespace.ClinicService;
+using static ClinicServiceNamespace.ConsultationService;
+using static ClinicServiceNamespace.PetService;
 
-AppContext.SetSwitch(
-                "System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
 
 using var channel = GrpcChannel.ForAddress("http://localhost:5001");
-ClinicServiceClient clinicServiceClient = new ClinicServiceClient(channel);
+ClinicServiceClient clinicServiceClient = new (channel);
+PetServiceClient petServiceClient = new (channel);
+ConsultationServiceClient consultationServiceClient = new (channel);
 
-var createClientResponse = clinicServiceClient.CreateClinet(new CreateClientRequest
+IProtobufClient<CreateClientRequest> clientPBClient =
+    new ClientPBClient(clinicServiceClient);
+IProtobufClient<CreatePetRequest> petPBClient =
+    new PetPBClient(petServiceClient);
+IProtobufClient<CreateConsultationRequest> consultationPBClient =
+    new ConsultationPBClient(consultationServiceClient);
+
+for (int i = 0; i < 10; i++)
 {
-    Document = "DOC34 445",
-    FirstName = "Данил",
-    Patronymic = "Валерьевич",
-    Surname = "Шабанов"
-});
-
-if (createClientResponse.ErrCode == 0)
-{
-    Console.WriteLine($"Client #{createClientResponse.ClientId} created successfully.");
-}
-else
-{
-    Console.WriteLine($"Create client error.\nErrorCode: {createClientResponse.ErrCode}\nErrorMessage: {createClientResponse.ErrMessage}");
-}
-
-var getClientResponse = clinicServiceClient.GetClients(new GetClientsRequest());
-
-if (createClientResponse.ErrCode == 0)
-{
-    Console.WriteLine("Clients");
-    Console.WriteLine("=======\n");
-
-    foreach (var client in getClientResponse.Clients)
+    var client = new CreateClientRequest
     {
-        Console.WriteLine($"#{client.ClientId} {client.Document} {client.Surname} {client.FirstName} {client.Patronymic}");
-    }
+        Document = Guid.NewGuid().ToString(),
+        Surname = "Шабанов",
+        FirstName = "Данил",
+        Patronymic = "Валерьевич"
+    };
+    clientPBClient.Create(client);
 }
-else
+clientPBClient.GetAll();
+
+for (int i = 0; i < 10; i++)
 {
-    Console.WriteLine($"Get clients error.\nErrorCode: {getClientResponse.ErrCode}\nErrorMessage: {getClientResponse.ErrMessage}");
+    var pet = new CreatePetRequest
+    {
+        ClientId = i + 1000,
+        Name = "Кот Барсик",
+        Birthday = DateTime.UtcNow.ToTimestamp()
+    };
+    petPBClient.Create(pet);
 }
+petPBClient.GetAll();
+
+for (int i = 0; i < 10; i++)
+{
+    var consultation = new CreateConsultationRequest
+    {
+        ClientId = i + 1000,
+        PetId = i + 10,
+        ConsultationDate = DateTime.UtcNow.AddDays(10).ToTimestamp(),
+        Description = "Первичный осмотр"
+    };
+    consultationPBClient.Create(consultation);
+}
+consultationPBClient.GetAll();
 
 Console.ReadKey();

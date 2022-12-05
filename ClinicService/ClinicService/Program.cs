@@ -57,6 +57,8 @@ namespace ClinicService
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<ClinicService.Services.Impl.ClinicService>();
+                endpoints.MapGrpcService<PetService.Services.Impl.PetService>();
+                endpoints.MapGrpcService<ConsultationService.Services.Impl.ConsultationService>();
             });
 
             app.Run();

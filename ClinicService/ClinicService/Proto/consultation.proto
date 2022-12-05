@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+option csharp_namespace = "ClinicServiceNamespace";
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+
+service ConsultationService{
+	rpc CreateConsultation (CreateConsultationRequest) returns (CreateConsultationResponse);
+	rpc GetConsultations (GetConsultationsRequest) returns (GetConsultationsResponse);
+}
+
+message CreateConsultationRequest {
+    int32 clientId = 1;
+    int32 petId = 2;
+    google.protobuf.Timestamp consultationDate = 3;
+    string description = 4;
+}
+
+message CreateConsultationResponse {
+    google.protobuf.Int32Value ConsultationId = 1;
+    int32 errCode = 2;
+    string errMessage = 3;
+}
+
+message GetConsultationsRequest { }
+
+message Consultation {
+    int32 ConsultationId = 1;
+    int32 clientId = 2;
+    int32 petId = 3;
+    google.protobuf.Timestamp consultationDate = 4;
+    string description = 5;
+}
+
+message GetConsultationsResponse {
+    repeated Consultation Consultations = 1;
+    int32 errCode = 2;
+    string errMessage = 3;
+}
