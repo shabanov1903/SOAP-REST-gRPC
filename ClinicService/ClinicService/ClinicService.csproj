@@ -7,6 +7,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<None Remove="Proto\auth.proto" />
 		<None Remove="Proto\clinic.proto" />
 		<None Remove="Proto\consultation.proto" />
 		<None Remove="Proto\pet.proto" />
@@ -18,6 +19,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.12" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.10">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -30,6 +32,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Protobuf Include="Proto\auth.proto" GrpcServices="Server" />
 		<Protobuf Include="Proto\consultation.proto" GrpcServices="Server" />
 		<Protobuf Include="Proto\pet.proto" GrpcServices="Server" />
 		<Protobuf Include="Proto\clinic.proto" GrpcServices="Server" />
